@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Metadata for the webpage -->
-    <meta charset="utf-8" />
-    <meta name="description" content="Web application development" />
-    <meta name="keywords" content="PHP" />
-    <meta name="author" content="Huy Vu Tran" />
-    <!-- Link to the Bootstrap CSS library -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Homepage</title>
-</head>
-<body>
-    <div class="container-fluid p-5 bg-dark text-white text-center">
-        <!-- Page content -->
-        <h1>My Friend System</h1>
-        <h2>Assignment Homepage</h2>
-        <p>Name : Huy Vu Tran</p>
-        <p>Student ID : 104177995</p>
-        <p>Email : <a href="mailto: 104177995@student.swin.edu.au" class="text-decoration-none text-white">104177995@student.swin.edu.au</a></p>
-        <p>I declare that this assignment is my individual work. I have not worked collaboratively nor have I copied from any other student’s work or from any other source.</p>
-        <?php
+<?php
             // Include the settings file
             require_once("settings.php");
             // Connect to the database
@@ -92,6 +71,29 @@
                 }
             }
         ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadata for the webpage -->
+    <meta charset="utf-8" />
+    <meta name="description" content="Web application development" />
+    <meta name="keywords" content="PHP" />
+    <meta name="author" content="Huy Vu Tran" />
+    <!-- Link to the Bootstrap CSS library -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Homepage</title>
+</head>
+<body>
+    <div class="container-fluid p-5 bg-dark text-white text-center">
+        <!-- Page content -->
+        <h1>My Friend System</h1>
+        <h2>Assignment Homepage</h2>
+        <p>Name : Huy Vu Tran</p>
+        <p>Student ID : 104177995</p>
+        <p>Email : <a href="mailto: 104177995@student.swin.edu.au" class="text-decoration-none text-white">104177995@student.swin.edu.au</a></p>
+        <p>I declare that this assignment is my individual work. I have not worked collaboratively nor have I copied from any other student’s work or from any other source.</p>
+
         <!-- Navigation buttons -->
         <a href="signup.php" class="btn btn-danger text-decoration-none">Sign Up</a>
         <a href="login.php" class="text-decoration-none btn btn-warning ">Log In</a>

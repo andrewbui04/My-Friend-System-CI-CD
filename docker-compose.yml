@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:80"
     environment:
-      DB_HOST: mysql  
+      DB_HOST: mysql-db 
       DB_NAME: my_friend_system
       DB_USER: myuser
       DB_PASS: mypassword
@@ -30,3 +30,5 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf  
