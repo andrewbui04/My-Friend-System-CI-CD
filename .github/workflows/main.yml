@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for My Friend System 
+=name: CI/CD Pipeline for My Friend System 
 
 on:
   push:
@@ -38,7 +38,6 @@ jobs:
       - name: Install PHP Extensions
         run: sudo apt-get install php-xml
 
-
       - name: Run PHPUnit Tests
         run: vendor/bin/phpunit tests
 
@@ -50,47 +49,35 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        
+
+      - name: Log in to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build & Push PHP App Image to Docker Hub
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my_friend_system-php-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/my_friend_system-php-app:latest
+
+      - name: Build & Push MySQL Image to Docker Hub
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mysql-db:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mysql-db:latest
+
       - name: Log in to Azure (Interactive)
         run: |
           az login --use-device-code
-
-      - name: Log in to Azure Container Registry
-        run: |
-          echo ${{ secrets.ACR_PASSWORD }} | docker login myfriendsystemregistry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
-
-      - name: Build & Push PHP App Image to ACR
-        run: |
-          docker build -t myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest .
-          docker push myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest
-
-      - name: Build & Push MySQL Image to ACR
-        run: |
-          docker build -t myfriendsystemregistry.azurecr.io/mysql-db:latest .
-          docker push myfriendsystemregistry.azurecr.io/mysql-db:latest
 
       - name: Deploy to Azure Container Apps
         run: |
           az containerapp update \
             --name php-app \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest \
+            --image ${{ secrets.DOCKER_USERNAME }}/my_friend_system-php-app:latest \
             --set-env-vars DB_HOST=mysql-db DB_NAME=my_friend_system DB_USER=myuser DB_PASS=mypassword
 
           az containerapp update \
             --name mysql-db \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image myfriendsystemregistry.azurecr.io/mysql-db:latest \
+            --image ${{ secrets.DOCKER_USERNAME }}/mysql-db:latest \
             --set-env-vars MYSQL_ROOT_PASSWORD=2611 MYSQL_DATABASE=my_friend_system MYSQL_USER=myuser MYSQL_PASSWORD=mypassword
-
-  #Initial steps for zero down time deloyment + specific environment
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
