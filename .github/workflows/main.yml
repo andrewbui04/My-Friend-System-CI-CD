@@ -69,19 +69,19 @@ jobs:
           docker build -t myfriendsystemregistry.azurecr.io/mysql-db:latest .
           docker push myfriendsystemregistry.azurecr.io/mysql-db:latest
 
-      - name: Deploy to Azure Container Apps
+            - name: Deploy to Azure Web App
         run: |
-          az containerapp update \
-            --name php-app \
+          az webapp create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest \
-            --set-env-vars DB_HOST=mysql-db DB_NAME=my_friend_system DB_USER=myuser DB_PASS=mypassword
+            --plan my-app-service-plan \
+            --name my-php-app \
+            --deployment-container-image-name myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest
+          
+          az webapp config appsettings set \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name my-php-app \
+            --settings DB_HOST=mysql-db DB_NAME=my_friend_system DB_USER=myuser DB_PASS=mypassword
 
-          az containerapp update \
-            --name mysql-db \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image myfriendsystemregistry.azurecr.io/mysql-db:latest \
-            --set-env-vars MYSQL_ROOT_PASSWORD=2611 MYSQL_DATABASE=my_friend_system MYSQL_USER=myuser MYSQL_PASSWORD=mypassword
 
   #Initial steps for zero down time deloyment + specific environment
     
