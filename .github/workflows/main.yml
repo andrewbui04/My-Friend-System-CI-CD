@@ -69,7 +69,7 @@ jobs:
           docker build -t myfriendsystemregistry.azurecr.io/mysql-db:latest .
           docker push myfriendsystemregistry.azurecr.io/mysql-db:latest
 
-            - name: Deploy to Azure Web App
+      - name: Deploy to Azure Web App
         run: |
           az webapp create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
