@@ -41,43 +41,42 @@ jobs:
       - name: Run PHPUnit Tests
         run: vendor/bin/phpunit tests
 
-  
   deploy:
-    name: Deploy to Azure Container Apps
+    name: Deploy to Azure Web Apps for Containers
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Log in to Docker Hub
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Build & Push PHP App Image to Docker Hub
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my_friend_system-php-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my_friend_system-php-app:latest
-
-      - name: Build & Push MySQL Image to Docker Hub
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/mysql-db:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/mysql-db:latest
-
-      - name: Log in to Azure (Interactive)
+      - name: Log in to Azure
         run: |
           az login --use-device-code
 
-      - name: Deploy to Azure Container Apps
+      - name: Log in to Azure Container Registry
         run: |
-          az containerapp update \
-            --name php-app \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image ${{ secrets.DOCKER_USERNAME }}/my_friend_system-php-app:latest \
-            --set-env-vars DB_HOST=mysql-db DB_NAME=my_friend_system DB_USER=myuser DB_PASS=mypassword
+          echo ${{ secrets.ACR_PASSWORD }} | docker login myfriendsystemregistry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
-          az containerapp update \
-            --name mysql-db \
+      - name: Build & Push PHP App Image to ACR
+        run: |
+          docker build -t myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest .
+          docker push myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest
+
+      - name: Build & Push MySQL Image to ACR
+        run: |
+          docker build -t myfriendsystemregistry.azurecr.io/mysql-db:latest .
+          docker push myfriendsystemregistry.azurecr.io/mysql-db:latest
+
+      - name: Deploy to Azure Web App with Multi-Container Setup
+        run: |
+          az webapp create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image ${{ secrets.DOCKER_USERNAME }}/mysql-db:latest \
-            --set-env-vars MYSQL_ROOT_PASSWORD=2611 MYSQL_DATABASE=my_friend_system MYSQL_USER=myuser MYSQL_PASSWORD=mypassword
+            --plan my-app-service-plan \
+            --name my-friend-system \
+            --deployment-container-image-name myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest
+
+          az webapp config container set \
+            --name my-friend-system \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --multicontainer-config-type compose \
+            --multicontainer-config-file docker-compose.yml
