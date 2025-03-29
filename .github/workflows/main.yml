@@ -50,6 +50,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        
+      - name: Log in to Azure (Interactive)
+        run: |
+          az login --use-device-code
 
       - name: Log in to Azure Container Registry
         run: |
