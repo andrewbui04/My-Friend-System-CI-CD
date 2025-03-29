@@ -1,4 +1,4 @@
-=name: CI/CD Pipeline for My Friend System 
+name: CI/CD Pipeline for My Friend System 
 
 on:
   push:
