@@ -38,18 +38,20 @@ jobs:
       - name: Install PHP Extensions
         run: sudo apt-get install php-xml
 
+
       - name: Run PHPUnit Tests
         run: vendor/bin/phpunit tests
 
+  
   deploy:
-    name: Deploy to Azure Web Apps for Containers
+    name: Deploy to Azure Container Apps
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Log in to Azure
+        
+      - name: Log in to Azure (Interactive)
         run: |
           az login --use-device-code
 
@@ -67,16 +69,28 @@ jobs:
           docker build -t myfriendsystemregistry.azurecr.io/mysql-db:latest .
           docker push myfriendsystemregistry.azurecr.io/mysql-db:latest
 
-      - name: Deploy to Azure Web App with Multi-Container Setup
+      - name: Deploy to Azure Container Apps
         run: |
-          az webapp create \
+          az containerapp update \
+            --name php-app \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --plan my-app-service-plan \
-            --name my-friend-system \
-            --deployment-container-image-name myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest
+            --image myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest \
+            --set-env-vars DB_HOST=mysql-db DB_NAME=my_friend_system DB_USER=myuser DB_PASS=mypassword
 
-          az webapp config container set \
-            --name my-friend-system \
+          az containerapp update \
+            --name mysql-db \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --multicontainer-config-type compose \
-            --multicontainer-config-file docker-compose.yml
+            --image myfriendsystemregistry.azurecr.io/mysql-db:latest \
+            --set-env-vars MYSQL_ROOT_PASSWORD=2611 MYSQL_DATABASE=my_friend_system MYSQL_USER=myuser MYSQL_PASSWORD=mypassword
+
+  #Initial steps for zero down time deloyment + specific environment
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
