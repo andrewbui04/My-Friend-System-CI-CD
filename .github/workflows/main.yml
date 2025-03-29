@@ -1,0 +1,123 @@
+name: CI/CD Pipeline for My Friend System 
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: 2611
+          MYSQL_DATABASE: my_friend_system
+          MYSQL_USER: myuser
+          MYSQL_PASSWORD: mypassword
+        ports:
+          - 3307:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, mysqli
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run PHPUnit Tests
+        run: vendor/bin/phpunit tests
+
+  # sonar:
+  #   name: Code Analysis with SonarQube
+  #   runs-on: ubuntu-latest
+  #   needs: build
+
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4
+
+  #     - name: SonarQube Scan
+  #       uses: sonarsource/sonarqube-scan-action@master
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  # docker:
+  #   name: Build & Push Docker Image
+  #   runs-on: ubuntu-latest
+  #   needs: sonar
+
+  #   steps:
+  #     - name: Log in to Docker Hub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_PASSWORD }}
+
+  #     - name: Build and Push Docker Image
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile
+  #         push: true
+  #         tags: ${{ secrets.DOCKER_USERNAME }}/my_friend_system-php-app:latest2
+
+  deploy:
+    name: Deploy to Azure Container Apps
+    runs-on: ubuntu-latest
+    needs: docker
+
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Log in to Azure Container Registry
+      run: |
+        echo ${{ secrets.ACR_PASSWORD }} | docker login myfriendsystemregistry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+    - name: Build & Push PHP App Image to ACR
+      run: |
+        docker build -t myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest .
+        docker push myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest
+
+    - name: Build & Push MySQL Image to ACR
+      run: |
+        docker build -t myfriendsystemregistry.azurecr.io/mysql-db:latest .
+        docker push myfriendsystemregistry.azurecr.io/mysql-db:latest
+
+    - name: Deploy to Azure Container Apps
+      run: |
+        az containerapp update \
+          --name php-app \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --image myfriendsystemregistry.azurecr.io/my_friend_system-php-app:latest \
+          --environment-variables DB_HOST=mysql-db DB_NAME=my_friend_system DB_USER=myuser DB_PASS=mypassword
+
+        az containerapp update \
+          --name mysql-db \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --image myfriendsystemregistry.azurecr.io/mysql-db:latest \
+          --environment-variables MYSQL_ROOT_PASSWORD=2611 MYSQL_DATABASE=my_friend_system MYSQL_USER=myuser MYSQL_PASSWORD=mypassword
+
+  #Initial steps for zero down time deloyment + specific environment
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
