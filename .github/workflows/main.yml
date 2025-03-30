@@ -86,7 +86,7 @@ jobs:
           az containerapp revision restart \
             --name php-app \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-            --all
+            --revision ${{ secrets.REVISION_NAME }}
 
 
   #Improvement: Monitor + sonarqube code quality scan + two separate environment testing and prod (after running pipeline(test server) 
