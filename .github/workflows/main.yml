@@ -71,13 +71,13 @@ jobs:
 
       - name: Deploy to Azure Container Apps
         run: |
-          az containerapp create \
+          az containerapp update \
             --name php-app \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --image swe40006.azurecr.io/my_friend_system-php-app:latest \
             --set-env-vars "DB_HOST=mysql-db" "DB_NAME=my_friend_system" "DB_USER=myuser" "DB_PASS=mypassword"
 
-          az containerapp create \
+          az containerapp update \
             --name mysql-db \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --image swe40006.azurecr.io/mysql-db:latest \
