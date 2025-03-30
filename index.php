@@ -89,7 +89,7 @@
         <!-- Page content -->
         <h1>My Friend System</h1>
         <h2>Assignment Homepage</h2>
-        <p>Name : Huy Vu Tran DMM RONALDO SIUUUU</p>
+        <p>Name : Huy Vu Tran I LOVE MESSI I HATE CR7</p>
         <p>Student ID : 104177995</p>
         <p>Email : <a href="mailto: 104177995@student.swin.edu.au" class="text-decoration-none text-white">104177995@student.swin.edu.au</a></p>
         <p>I declare that this assignment is my individual work. I have not worked collaboratively nor have I copied from any other student’s work or from any other source.</p>
