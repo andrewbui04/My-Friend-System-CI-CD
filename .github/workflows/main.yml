@@ -57,33 +57,34 @@ jobs:
           
       - name: Log in to Azure Container Registry
         run: |
-          echo ${{ secrets.ACR_PASSWORD }} | docker login friendsystemregistry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+          echo ${{ secrets.ACR_PASSWORD }} | docker login swe40006.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
       - name: Build & Push PHP App Image to ACR
         run: |
-          docker build -t friendsystemregistry.azurecr.io/my_friend_system-php-app:latest .
-          docker push friendsystemregistry.azurecr.io/my_friend_system-php-app:latest
+          docker build -t swe40006.azurecr.io/my_friend_system-php-app:latest .
+          docker push swe40006.azurecr.io/my_friend_system-php-app:latest
 
       - name: Build & Push MySQL Image to ACR
         run: |
-          docker build -t friendsystemregistry.azurecr.io/mysql-db:latest .
-          docker push friendsystemregistry.azurecr.io/mysql-db:latest
+          docker build -t swe40006.azurecr.io/mysql-db:latest .
+          docker push swe40006.azurecr.io/mysql-db:latest
 
       - name: Deploy to Azure Container Apps
         run: |
           az containerapp update \
             --name php-app \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image friendsystemregistry.azurecr.io/my_friend_system-php-app:latest \
+            --image swe40006.azurecr.io/my_friend_system-php-app:latest \
             --set-env-vars DB_HOST=mysql-db DB_NAME=my_friend_system DB_USER=myuser DB_PASS=mypassword
 
           az containerapp update \
             --name mysql-db \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image friendsystemregistry.azurecr.io/mysql-db:latest \
+            --image swe40006.azurecr.io/mysql-db:latest \
             --set-env-vars MYSQL_ROOT_PASSWORD=2611 MYSQL_DATABASE=my_friend_system MYSQL_USER=myuser MYSQL_PASSWORD=mypassword
 
-  #Initial steps for zero down time deloyment + specific environment
+  #Improvement: Monitor + sonarqube code quality scan + two separate environment testing and prod (after running pipeline(test server) 
+                                                                                                #=> integration test if passed => prod server)
     
     
     
