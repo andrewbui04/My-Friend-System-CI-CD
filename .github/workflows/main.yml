@@ -85,7 +85,7 @@ jobs:
           
           az containerapp revision restart \
             --name php-app \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --revision ${{ secrets.REVISION_NAME }}
 
 
