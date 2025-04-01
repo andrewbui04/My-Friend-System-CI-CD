@@ -88,8 +88,9 @@
     <div class="container-fluid p-5 bg-dark text-white text-center">
         <!-- Page content -->
         <h1>My Friend System</h1>
-        <h2>Assignment Homepage I LOVE CR7 and ATHONY!!!!</h2>
+        <h2>Assignment Homepage</h2>
         <p>Name : Huy Vu Tran </p>
+        <p>My favorite footballer: Cristiano Messiado siuuuu</p>
         <p>Student ID : 104177995</p>
         <p>Email : <a href="mailto: 104177995@student.swin.edu.au" class="text-decoration-none text-white">104177995@student.swin.edu.au</a></p>
         <p>I declare that this assignment is my individual work. I have not worked collaboratively nor have I copied from any other student’s work or from any other source.</p>
