@@ -103,7 +103,7 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --query properties.configuration.ingress.fqdn \
             --output tsv)
-          echo "STAGING_URL=http://$STAGING_URL" >> $GITHUB_ENV
+          echo "STAGING_URL=https://$STAGING_URL" >> $GITHUB_ENV
 
       - name: Run Basic Integration Tests
         run: |
