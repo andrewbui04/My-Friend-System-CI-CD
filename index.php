@@ -10,7 +10,7 @@
 
             // If both tables exist
             if(mysqli_num_rows($checkTable1) > 0 && mysqli_num_rows($checkTable2) > 0) {
-                echo "<p>dmmVuntra</p>";
+                echo "<p>dmmVuntra as Huy VU</p>";
             } else {
                 // If not, create the tables and populate them
                 $query = 
