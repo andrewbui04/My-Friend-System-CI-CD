@@ -34,6 +34,13 @@ class SimpleTest extends TestCase
         $this->assertNotFalse($query->fetch());
     }
 
+     //Check If 'myfriends' table exists
+     public function testMyFriendsTableExists()
+     {
+         $query = $this->pdo->query("SHOW TABLES LIKE 'myfriends'");
+         $this->assertNotFalse($query->fetch());
+     }
+
     //Close database connection after tests
     protected function tearDown(): void
     {

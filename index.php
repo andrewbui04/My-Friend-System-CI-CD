@@ -10,7 +10,7 @@
 
             // If both tables exist
             if(mysqli_num_rows($checkTable1) > 0 && mysqli_num_rows($checkTable2) > 0) {
-                echo "<p>Tables already exist.</p>";
+                echo "<p></p>";
             } else {
                 // If not, create the tables and populate them
                 $query = 
