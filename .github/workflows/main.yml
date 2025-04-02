@@ -130,8 +130,8 @@ jobs:
 
       - name: Build & Push Production PHP App Image
         run: |
-          docker build -t swe40006.azurecr.io/my_friend_system-php-app-production:latest .
-          docker push swe40006.azurecr.io/my_friend_system-php-app-production:latest
+          docker build -t swe40006.azurecr.io/my_friend_system-php-app:latest .
+          docker push swe40006.azurecr.io/my_friend_system-php-app:latest
 
       - name: Deploy to Azure Container Apps for prod pupose
         run: |
