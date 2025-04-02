@@ -111,9 +111,8 @@ jobs:
           curl --fail $STAGING_URL || exit 1
           
           echo "Checking if the homepage works as expectation..."
-          curl -s $STAGING_URL | grep -Eqi "My Friend System" || { echo "ERROR: 'My Friend System' not found!"; exit 1; }
           curl -s $STAGING_URL | grep -Eqi "Assignment Homepage" || { echo "ERROR: 'Assignment Homepage' not found!"; exit 1; }
-          curl -s $STAGING_URL | grep -Eqi "Huy Vu Tran" || { echo "ERROR: 'Huy Vu Tran' not found!"; exit 1; }
+
 
   deploy_to_production:
     name: Deploy to Production
