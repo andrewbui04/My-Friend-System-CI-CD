@@ -99,7 +99,7 @@ jobs:
       - name: Get Staging URL
         run: |
           STAGING_URL=$(az containerapp show \
-            --name php-app-staging \
+            --name php-app \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --query properties.configuration.ingress.fqdn \
             --output tsv)
